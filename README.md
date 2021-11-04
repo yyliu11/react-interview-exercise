@@ -24,15 +24,16 @@ This coding exercise is meant to allow you to demonstrate creative problem solvi
 
 ## Prompt
 
-The goal of this exercise is to build a prototype utility that gives users ability to search and view school district information from [NCES + ArcGIS apis](https://data-nces.opendata.arcgis.com/datasets/nces::private-school-locations-current/api). See [this dataset and others](https://data-nces.opendata.arcgis.com/datasets/school-district-characteristics-2019-20/explore). The api methods are already [implemented for you in this repository](src/utils/nces.ts), your objective is to create an interactive interface to filter and view the returned data. 
+The goal of this exercise is to build a prototype utility that gives users ability to search and view school district information from [NCES + ArcGIS apis](https://data-nces.opendata.arcgis.com/datasets/nces::private-school-locations-current/api). See [this dataset and others](https://data-nces.opendata.arcgis.com/datasets/school-district-characteristics-2019-20/explore). The api methods are already [implemented for you in this repository](src/utils/nces.ts), your objective is to create an interactive interface to filter and view the selected data. 
 
 - Fork this repository, and push all your changes to Github
+    - Set Fork to private and add @ashmartian as a member
     - Looking for semi-descriptive commit messages
 - Working out of [Home.tsx](/src/components/Home.tsx):
     - Add the needed React `useEffect` statements for district and school searching
     - Create the UX around these 2 functions, utilize search inputs, lists, and a view container
     - District and School selection functionality, display a list, then when selected show more information
-- Please enable Github Pages in your Fork and update the url in your README.md
+- Please enable Github Pages and Github Actions in your Fork and update the url in your README.md
     - If your repository is not named `react-interview-exercise` you must update [vite.config.ts](vite.config.ts) "base" path
 
 ### Considerations
@@ -46,7 +47,7 @@ The goal of this exercise is to build a prototype utility that gives users abili
 - CharacterStrong is highly design oriented, and aiming to provide students with animated interactive content. Show how you convey this in your UX. Reference https://rc.characterstrong.com for a glimpse into future design considerations.
 - There are issues with this repository, if you see something you don't like, add a comment/fix them!
 - Could you display school(s) on a [Google Map](https://tomchentw.github.io/react-google-maps/#introduction)? (API Key in [maps.ts](src/utils/maps.ts))
-- Are there any other [NCES APIs](https://data-nces.opendata.arcgis.com/search?tags=nces) that might be useful for this tool?(if so, integrate them)
+- Are there any other [NCES APIs](https://data-nces.opendata.arcgis.com/search?tags=nces) that might be useful for this tool?
 
 ## What Happens Next?
 
