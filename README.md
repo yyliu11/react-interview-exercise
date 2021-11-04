@@ -17,17 +17,18 @@ This coding exercise is meant to allow you to demonstrate creative problem solvi
 
 ### Getting Started
 
-1. Fork and Clone the repository
+1. Clone the repository `git clone https://github.com/CharacterStrong/react-interview-exercise`
 2. Install dependencies `cd react-interview-exercise && npm i`
 3. Run local development server `npm run dev`
 4. Navigate to http://localhost:3000
+5. Follow the Prompt
+6. Create a new Github repository, ensure @AshMartian can access
 
 ## Prompt
 
 The goal of this exercise is to build a prototype utility that gives users ability to search and view school district information from [NCES + ArcGIS apis](https://data-nces.opendata.arcgis.com/datasets/nces::private-school-locations-current/api). See [this dataset and others](https://data-nces.opendata.arcgis.com/datasets/school-district-characteristics-2019-20/explore). The api methods are already [implemented for you in this repository](src/utils/nces.ts), your objective is to create an interactive interface to filter and view the selected data. 
 
-- Fork this repository, and push all your changes to Github
-    - Set Fork to private and add @ashmartian as a member
+- Push all your changes to Github
     - Looking for semi-descriptive commit messages
 - Working out of [Home.tsx](/src/components/Home.tsx):
     - Add the needed React `useEffect` statements for district and school searching
