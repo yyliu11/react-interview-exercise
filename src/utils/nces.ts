@@ -62,7 +62,7 @@ const searchSchoolDistricts = async (name:string):Promise<NCESDistrictFeatureAtt
     let publicSchoolEndpoint = `https://nces.ed.gov/opengis/rest/services/K12_School_Locations/EDGE_GEOCODE_PUBLICLEA_1516/MapServer/0/query?where=UPPER(NAME) LIKE UPPER('%${name}%')&outFields=*&outSR=4326&f=json`;
     let combinedData = [];
     let publicResponse = await (await fetch(publicSchoolEndpoint)).json();
-    
+
     combinedData = [
         ...publicResponse.features ? publicResponse.features.map((feature:NCESDistrictFeature) => {return feature.attributes }) : [],
     ]
@@ -75,7 +75,7 @@ const searchSchools = async (name:string, district?:string):Promise<NCESSchoolFe
     let combinedData = [];
     let privateResponse = await (await fetch(privateSchoolEndpoint)).json();
     let publicResponse = await (await fetch(publicSchoolEndpoint)).json();
-    
+
     combinedData = [
         ...privateResponse.features ? privateResponse.features.map((feature:NCESSchoolFeature) => {return feature.attributes }) : [],
         ...publicResponse.features ? publicResponse.features.map((feature:NCESSchoolFeature) => {return feature.attributes }) : [],

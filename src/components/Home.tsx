@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import {
     Button,
     Center,
@@ -14,39 +14,57 @@ import {
     InputGroup, // Some Chakra components that might be usefull
     HStack,
     VStack,
-    InputRightAddon,
+    InputRightAddon
 } from "@chakra-ui/react"
+import { Search2Icon } from '@chakra-ui/icons'
 import { Card } from '@components/design/Card'
 import { searchSchoolDistricts, searchSchools, NCESDistrictFeatureAttributes, NCESSchoolFeatureAttributes } from "@utils/nces"
 
 
 const Home: React.FC = () => {
-    const [searching, setSearching] = React.useState(false)
-    const [districtSearch, setDistrictSearch] = React.useState<NCESDistrictFeatureAttributes[]>([]);
-    const [schoolSearch, setSchoolSearch] = React.useState<NCESSchoolFeatureAttributes[]>([]);
-    
+    const [districtSearch, setDistrictSearch] = useState('')
+    const [schoolSearch, setSchoolSearch] = useState('')
+    const [districtData, setDistrictData] = useState<NCESDistrictFeatureAttributes[]>([]);
+    const [schoolData, setSchoolData] = useState<NCESSchoolFeatureAttributes[]>([]);
+
     const demo = async () => { // see console for api result examples
-        setSearching(true)
+
         const demoDistrictSearch = await searchSchoolDistricts("Peninsula School District")
         setDistrictSearch(demoDistrictSearch)
-        console.log("District example", demoDistrictSearch)
 
-        const demoSchoolSearch = await searchSchools("k", demoDistrictSearch[1].LEAID)
+        const demoSchoolSearch = await searchSchools("m", demoDistrictSearch[1].LEAID)
         setSchoolSearch(demoSchoolSearch)
         console.log("School Example", demoSchoolSearch)
-        setSearching(false)
+
     }
 
-    useEffect(() => {
-        demo()
-    }, [])
-    
+
+    const handleDistrictSearch = async (dist) => {
+            const districts = await searchSchoolDistricts(dist)
+            setDistrictData(districts)
+    }
+    console.log("District example", districtData)
+
     return (
-        <Center padding="100px" height="90vh">
+        <Center bg="tomato" padding="100px" height="auto">
             <ScaleFade initialScale={0.9} in={true}>
-                <Card variant="rounded" borderColor="blue">
+                <Card variant="rounded" borderColor="blue" height="auto">
                     <Heading>School Data Finder</Heading>
-                    <Text>
+                    <InputGroup>
+                        <Input type="text"
+                            width="500px"
+                            placeholder="search school district"
+                            borderRadius="20px"
+                            onChange={e => setDistrictSearch(e.target.value)}
+                        />
+                        <InputRightAddon
+                            backgroundColor="green"
+                            children={<Search2Icon color='white'/>}
+                            borderRadius="20px"
+                            onClick={() => handleDistrictSearch(districtSearch)}
+                        />
+                    </InputGroup>
+                    {/* <Text>
                         How would you utilize React.useEffect with the searchSchoolDistricts and searchSchools functions? <br />
                         Using <a href="https://chakra-ui.com/docs/principles" target="_blank">Chakra-UI</a> or your favorite UI toolkit, build an interface that allows the user to: <br />
                         <OrderedList>
@@ -61,7 +79,7 @@ const Home: React.FC = () => {
                         {searching ? <Spinner /> : <></>}< br />
                         {districtSearch.length} Demo Districts<br />
                         {schoolSearch.length} Demo Schools<br />
-                    </Text>
+                    </Text> */}
                 </Card>
             </ScaleFade>
         </Center>
