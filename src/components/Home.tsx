@@ -26,14 +26,14 @@ import { searchSchoolDistricts, searchSchools, NCESDistrictFeatureAttributes, NC
 const Home: React.FC = () => {
     const [districtSearch, setDistrictSearch] = useState('')
     const [schoolSearch, setSchoolSearch] = useState('')
+    const [schoolDistrict, setSchoolDistrict] = useState('')
     const [districtData, setDistrictData] = useState<NCESDistrictFeatureAttributes[]>([]);
     const [schoolData, setSchoolData] = useState<NCESSchoolFeatureAttributes[]>([]);
     const [showResult, setShowResult] = useState(false);
 
-    const demo = async () => { // see console for api result example
-        const demoSchoolSearch = await searchSchools("m", demoDistrictSearch[1].LEAID)
-        setSchoolSearch(demoSchoolSearch)
-        console.log("School Example", schoolSearch)
+    const handleSchoolSearch = async (schl, district) => {
+        const schools = await searchSchools(schl, district)
+        setSchoolData(schools)
     }
 
 
@@ -41,10 +41,11 @@ const Home: React.FC = () => {
             const districts = await searchSchoolDistricts(dist);
             setDistrictData(districts);
             setShowResult(true);
-            setSchoolSearch(districts[0].NAME)
+            setSchoolDistrict(districts[0].LEAID)
     }
-    // console.log("searchSchool", districtData)
-console.log(schoolSearch)
+    console.log("searchSchool", schoolData)
+
+
     return (
         <Center bg="tomato" p="110px" h="100%">
             <ScaleFade initialScale={0.9} in={true} >
@@ -69,28 +70,57 @@ console.log(schoolSearch)
                     <Card
                         variant="rounded"
                         border="transparent"
-                        h="200px"
+                        h="auto"
                         w="250px"
                         zIndex="1"
                         position="absolute"
                         right="10"
                         top="25%"
                     >
+                        <Text
+                            marginRight="8"
+                            fontWeight="bold"
+                            fontSize="sm"
+                        >
+                            Select School District:
+                        </Text>
                         <Select
-                            value={schoolSearch}
+                            value={schoolDistrict}
                             variant="flushed"
                             size="sm"
-                            onChange={(e) => setSchoolSearch(e.target.value)}
+                            onChange={(e) => setSchoolDistrict(e.target.value)}
                         >
                             {districtData.map((district, idx) =>
                                 <option
                                     key={idx}
-                                    value={district.NAME}
+                                    value={district.LEAID}
                                 >
                                     {district.NAME}
                                 </option>
                             )}
                         </Select>
+                        <Text
+                            marginRight="80px"
+                            fontWeight="bold"
+                            fontSize="sm"
+                        >
+                            Search school:
+                        </Text>
+                        <Input
+                        type="text"
+                        width="100%"
+                        onChange={e => setSchoolSearch(e.target.value)}
+                        />
+                        <Button
+                            bg="green"
+                            variant="solid" c
+                            olorScheme="orange"
+                            size="md"
+                            marginTop="3"
+                            onClick={() => handleSchoolSearch(schoolSearch, schoolDistrict)}
+                        >
+                            Search
+                        </Button>
                     </Card>: null
                 }
                 {showResult ?
@@ -99,7 +129,7 @@ console.log(schoolSearch)
                             <Box key={idx} p={3} display={{ md: "flex" }} w="95%" borderBottom='2px'>
                                 <Text
                                     fontWeight="bold"
-                                    fontSize="sm"
+                                    fontSize="lg"
                                     letterSpacing="wide"
                                     color="teal.600"
                                     marginLeft="3%"
