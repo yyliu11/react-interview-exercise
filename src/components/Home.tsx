@@ -33,7 +33,7 @@ const Home: React.FC = () => {
     const demo = async () => { // see console for api result example
         const demoSchoolSearch = await searchSchools("m", demoDistrictSearch[1].LEAID)
         setSchoolSearch(demoSchoolSearch)
-        console.log("School Example", demoSchoolSearch)
+        console.log("School Example", schoolSearch)
     }
 
 
@@ -41,9 +41,10 @@ const Home: React.FC = () => {
             const districts = await searchSchoolDistricts(dist);
             setDistrictData(districts);
             setShowResult(true);
+            setSchoolSearch(districts[0].NAME)
     }
-    console.log("District example", districtData)
-
+    // console.log("searchSchool", districtData)
+console.log(schoolSearch)
     return (
         <Center bg="tomato" p="110px" h="100%">
             <ScaleFade initialScale={0.9} in={true} >
@@ -75,9 +76,19 @@ const Home: React.FC = () => {
                         right="10"
                         top="25%"
                     >
-                        <Select defaultValue={districtData[0].NAME} >
+                        <Select
+                            value={schoolSearch}
+                            variant="flushed"
+                            size="sm"
+                            onChange={(e) => setSchoolSearch(e.target.value)}
+                        >
                             {districtData.map((district, idx) =>
-                                <option key={idx} value={district.NAME}>{district.NAME}</option>
+                                <option
+                                    key={idx}
+                                    value={district.NAME}
+                                >
+                                    {district.NAME}
+                                </option>
                             )}
                         </Select>
                     </Card>: null
