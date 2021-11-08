@@ -16,7 +16,15 @@ import {
     VStack,
     InputRightAddon,
     Box,
-    Select
+    Select,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverHeader,
+    PopoverBody,
+    PopoverFooter,
+    PopoverArrow,
+    PopoverCloseButton,
 } from "@chakra-ui/react"
 import { Search2Icon, InfoIcon } from '@chakra-ui/icons'
 import { Card } from '@components/design/Card'
@@ -111,7 +119,7 @@ const Home: React.FC = () => {
                         w="250px"
                         zIndex="1"
                         position="absolute"
-                        right="10"
+                        left="10"
                         top="25%"
                     >
                         <Text
@@ -150,9 +158,8 @@ const Home: React.FC = () => {
                         onChange={e => setSchoolSearch(e.target.value)}
                         />
                         <Button
-                            bg="green"
-                            variant="solid" c
-                            colorScheme="orange"
+                            variant="solid"
+                            colorScheme="green"
                             size="md"
                             marginTop="3"
                             onClick={() => handleSchoolSearch(schoolSearch, schoolDistrict)}
@@ -177,7 +184,30 @@ const Home: React.FC = () => {
                                 >
                                     {district.NAME}
                                 </Text>
-                                <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                    </PopoverTrigger>
+                                    <PopoverContent w="auto" h="auto" color="white" bg="blue.800" borderColor="blue.800" fontSize="sm">
+                                        <PopoverHeader fontWeight="bold" fontSize="md">{district.NAME}</PopoverHeader>
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverBody>
+                                            <Text>
+                                                Address: {district.LSTREE}, {district.LCITY}, {district.LSTATE} {district.LZIP}-{district.LZIP4}
+                                            </Text>
+                                            <Text>
+                                                County Name: {district.NMCNTY15}
+                                            </Text>
+                                            <Text>
+                                                Agency Identification Number: {district.LEAID}
+                                            </Text>
+                                            <Text>
+                                                State of Operation: {district.OPSTFIPS}
+                                            </Text>
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
                             </Box>
                         )}
                     </Card> : null
@@ -198,7 +228,33 @@ const Home: React.FC = () => {
                                 >
                                     {school.NAME}
                                 </Text>
-                                <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                    </PopoverTrigger>
+                                    <PopoverContent w="auto" h="auto" color="white" bg="blue.800" borderColor="blue.800" fontSize="sm">
+                                        <PopoverHeader fontWeight="bold" fontSize="md">{school.NAME}</PopoverHeader>
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverBody>
+                                            <Text>
+                                                Address: {school.STREET}, {school.CITY}, {school.STATE} {school.ZIP}
+                                            </Text>
+                                            <Text>
+                                                County Name: {school.NMCNTY}
+                                            </Text>
+                                            <Text>
+                                                School Year: {school.SCHOOLYEAR}
+                                            </Text>
+                                            <Text>
+                                                Agency Identification Number: {school.LEAID}
+                                            </Text>
+                                            <Text>
+                                                State of Operation: {school.OPSTFIPS}
+                                            </Text>
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
                             </Box>
                         )}
                     </Card> : null
