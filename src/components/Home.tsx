@@ -24,25 +24,53 @@ import { searchSchoolDistricts, searchSchools, NCESDistrictFeatureAttributes, NC
 
 
 const Home: React.FC = () => {
-    const [districtSearch, setDistrictSearch] = useState('')
-    const [schoolSearch, setSchoolSearch] = useState('')
-    const [schoolDistrict, setSchoolDistrict] = useState('')
+    const [districtSearch, setDistrictSearch] = useState('');
+    const [schoolSearch, setSchoolSearch] = useState('');
+    const [schoolDistrict, setSchoolDistrict] = useState('');
     const [districtData, setDistrictData] = useState<NCESDistrictFeatureAttributes[]>([]);
     const [schoolData, setSchoolData] = useState<NCESSchoolFeatureAttributes[]>([]);
-    const [showResult, setShowResult] = useState(false);
+    const [showDistList, setShowDistList] = useState(false);
+    const [showSchoolList, setShowSchoolList] = useState(false);
+    const [showDistFilter, setShowDistFilter] = useState(false);
+    const [showSearchHint, setShowSearchHint] = useState(false);
+    const [showNoResult, setShowNoResult] = useState(false);
 
     const handleSchoolSearch = async (schl, district) => {
-        const schools = await searchSchools(schl, district)
-        setSchoolData(schools)
-    }
+        const schools = await searchSchools(schl, district);
+        setSchoolData(schools);
+        setShowSchoolList(true);
+        setShowDistList(false);
 
+        if(!schools.length){
+            setShowNoResult(true);
+        }else{
+            setShowNoResult(false);
+        }
+    };
 
     const handleDistrictSearch = async (dist) => {
-            const districts = await searchSchoolDistricts(dist);
-            setDistrictData(districts);
-            setShowResult(true);
-            setSchoolDistrict(districts[0].LEAID)
-    }
+        if(dist.length <= 5){
+            setShowSearchHint(true);
+            return;
+        }
+
+        setShowSearchHint(false);
+        const districts = await searchSchoolDistricts(dist);
+        setDistrictData(districts);
+        setShowDistList(true);
+        setShowDistFilter(true);
+        setShowSchoolList(false);
+        setSchoolSearch('');
+
+        if(!districts.length){
+            setShowNoResult(true);
+            return;
+        }else{
+            setShowNoResult(false);
+        }
+
+        setSchoolDistrict(districts[0].LEAID);
+    };
     console.log("searchSchool", schoolData)
 
 
@@ -66,7 +94,16 @@ const Home: React.FC = () => {
                         onClick={() => handleDistrictSearch(districtSearch)}
                     />
                 </InputGroup>
-                {showResult ?
+                {showSearchHint ?
+                    <Text
+                        textAlign="center"
+                        fontSize="sm"
+                        paddingBottom="3"
+                    >
+                        * Input a school district name
+                    </Text> : null
+                }
+                {showDistFilter ?
                     <Card
                         variant="rounded"
                         border="transparent"
@@ -109,12 +146,13 @@ const Home: React.FC = () => {
                         <Input
                         type="text"
                         width="100%"
+                        value={schoolSearch}
                         onChange={e => setSchoolSearch(e.target.value)}
                         />
                         <Button
                             bg="green"
                             variant="solid" c
-                            olorScheme="orange"
+                            colorScheme="orange"
                             size="md"
                             marginTop="3"
                             onClick={() => handleSchoolSearch(schoolSearch, schoolDistrict)}
@@ -123,8 +161,11 @@ const Home: React.FC = () => {
                         </Button>
                     </Card>: null
                 }
-                {showResult ?
+                {showDistList ?
                     <Card variant="rounded" border="transparent" h="auto" w="700px">
+                        {showNoResult ?
+                            <Text>No search result</Text> : null
+                        }
                         {districtData.map((district, idx) =>
                             <Box key={idx} p={3} display={{ md: "flex" }} w="95%" borderBottom='2px'>
                                 <Text
@@ -135,6 +176,27 @@ const Home: React.FC = () => {
                                     marginLeft="3%"
                                 >
                                     {district.NAME}
+                                </Text>
+                                <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                            </Box>
+                        )}
+                    </Card> : null
+                }
+                {showSchoolList ?
+                    <Card variant="rounded" border="transparent" h="auto" w="700px">
+                        {showNoResult ?
+                            <Text>No search result</Text> : null
+                        }
+                        {schoolData.map((school, idx) =>
+                            <Box key={idx} p={3} display={{ md: "flex" }} w="95%" borderBottom='2px'>
+                                <Text
+                                    fontWeight="bold"
+                                    fontSize="lg"
+                                    letterSpacing="wide"
+                                    color="teal.600"
+                                    marginLeft="3%"
+                                >
+                                    {school.NAME}
                                 </Text>
                                 <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
                             </Box>
