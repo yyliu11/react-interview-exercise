@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState, useRef } from "react"
 import {
     Button,
     Center,
@@ -22,21 +22,21 @@ import {
     PopoverContent,
     PopoverHeader,
     PopoverBody,
-    PopoverFooter,
     PopoverArrow,
     PopoverCloseButton,
 } from "@chakra-ui/react"
 import { Search2Icon, InfoIcon } from '@chakra-ui/icons'
 import { Card } from '@components/design/Card'
-import { searchSchoolDistricts, searchSchools, NCESDistrictFeatureAttributes, NCESSchoolFeatureAttributes } from "@utils/nces"
+import { searchSchoolDistricts, searchSchools } from "@utils/nces"
+import { Map } from './Map'
 
 
 const Home: React.FC = () => {
     const [districtSearch, setDistrictSearch] = useState('');
     const [schoolSearch, setSchoolSearch] = useState('');
     const [schoolDistrict, setSchoolDistrict] = useState('');
-    const [districtData, setDistrictData] = useState<NCESDistrictFeatureAttributes[]>([]);
-    const [schoolData, setSchoolData] = useState<NCESSchoolFeatureAttributes[]>([]);
+    const [districtData, setDistrictData] = useState([]);
+    const [schoolData, setSchoolData] = useState([]);
     const [showDistList, setShowDistList] = useState(false);
     const [showSchoolList, setShowSchoolList] = useState(false);
     const [showDistFilter, setShowDistFilter] = useState(false);
@@ -79,11 +79,11 @@ const Home: React.FC = () => {
 
         setSchoolDistrict(districts[0].LEAID);
     };
-    console.log("searchSchool", schoolData)
+    console.log("School data", schoolData)
 
 
     return (
-        <Center bg="tomato" p="110px" h="100%">
+        <Center bg="tomato" paddingTop="110px" h="100%">
             <ScaleFade initialScale={0.9} in={true} >
                 <Heading textAlign="center" >School Data Finder</Heading>
                 <InputGroup p="20px" justifyContent="center">
@@ -186,7 +186,11 @@ const Home: React.FC = () => {
                                 </Text>
                                 <Popover>
                                     <PopoverTrigger>
-                                        <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                        <Box marginLeft="auto" marginRight="3%">
+                                            <ScaleFade initialScale={0.9} in={true} whileHover={{ scale: 1.5 }}>
+                                                <InfoIcon color="teal.600" cursor="pointer" w={5} h={5}/>
+                                            </ScaleFade>
+                                        </Box>
                                     </PopoverTrigger>
                                     <PopoverContent w="auto" h="auto" color="white" bg="blue.800" borderColor="blue.800" fontSize="sm">
                                         <PopoverHeader fontWeight="bold" fontSize="md">{district.NAME}</PopoverHeader>
@@ -252,6 +256,9 @@ const Home: React.FC = () => {
                                             <Text>
                                                 State of Operation: {school.OPSTFIPS}
                                             </Text>
+                                            <Box h="150px" w="300px">
+                                                <Map geo={school.GEO} />
+                                            </Box>
                                         </PopoverBody>
                                     </PopoverContent>
                                 </Popover>

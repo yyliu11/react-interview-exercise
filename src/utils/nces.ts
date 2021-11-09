@@ -73,13 +73,15 @@ const searchSchools = async (name:string, district?:string):Promise<NCESSchoolFe
     let privateSchoolEndpoint = `https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Private_School_Locations_Current/FeatureServer/0/query?where=UPPER(NAME) LIKE UPPER('%${name}%')${district ? `%20AND%20LEAID%20%3D%20'${district}'` : ""}&outFields=*&outSR=4326&f=json`;
     let publicSchoolEndpoint = `https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=UPPER(NAME) LIKE UPPER('%${name}%')${district ? `%20AND%20LEAID%20%3D%20'${district}'` : ""}&outFields=*&outSR=4326&f=json`;
     let combinedData = [];
+    let combinedGeos = [];
     let privateResponse = await (await fetch(privateSchoolEndpoint)).json();
     let publicResponse = await (await fetch(publicSchoolEndpoint)).json();
 
     combinedData = [
-        ...privateResponse.features ? privateResponse.features.map((feature:NCESSchoolFeature) => {return feature.attributes }) : [],
-        ...publicResponse.features ? publicResponse.features.map((feature:NCESSchoolFeature) => {return feature.attributes }) : [],
+        ...privateResponse.features ? privateResponse.features.map((feature:NCESSchoolFeature) => {feature.attributes["GEO"] = feature.geometry; return feature.attributes }) : [],
+        ...publicResponse.features ? publicResponse.features.map((feature:NCESSchoolFeature) => {feature.attributes["GEO"] = feature.geometry; return feature.attributes }) : [],
     ]
+
     return combinedData;
 }
 
