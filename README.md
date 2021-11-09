@@ -17,7 +17,7 @@ This coding exercise is meant to allow you to demonstrate creative problem solvi
 
 ### Getting Started
 
-1. Clone the repository `git clone https://github.com/CharacterStrong/react-interview-exercise`
+1. Clone the repository `git clone https://github.com/yyliu11/react-interview-exercise`
 2. Install dependencies `cd react-interview-exercise && npm i`
 3. Run local development server `npm run dev`
 4. Navigate to http://localhost:3000
