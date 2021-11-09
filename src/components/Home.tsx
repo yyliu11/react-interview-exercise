@@ -29,6 +29,9 @@ import { Search2Icon, InfoIcon } from '@chakra-ui/icons'
 import { Card } from '@components/design/Card'
 import { searchSchoolDistricts, searchSchools } from "@utils/nces"
 import { Map } from './Map'
+import Animation from './animation'
+import effect from './effect.json'
+import searching from './searching.json'
 
 
 const Home: React.FC = () => {
@@ -42,8 +45,14 @@ const Home: React.FC = () => {
     const [showDistFilter, setShowDistFilter] = useState(false);
     const [showSearchHint, setShowSearchHint] = useState(false);
     const [showNoResult, setShowNoResult] = useState(false);
+    const [showSchoolSearchHint, setShowSchoolSearchHint] = useState(false);
 
     const handleSchoolSearch = async (schl, district) => {
+        if(schl.length <= 4) {
+            setShowSchoolSearchHint(true);
+            return
+        }
+        setShowSchoolSearchHint(false);
         const schools = await searchSchools(schl, district);
         setSchoolData(schools);
         setShowSchoolList(true);
@@ -79,11 +88,10 @@ const Home: React.FC = () => {
 
         setSchoolDistrict(districts[0].LEAID);
     };
-    console.log("School data", schoolData)
 
 
     return (
-        <Center bg="tomato" paddingTop="110px" h="100%">
+        <Center paddingTop="80px" h="100%">
             <ScaleFade initialScale={0.9} in={true} >
                 <Heading textAlign="center" >School Data Finder</Heading>
                 <InputGroup p="20px" justifyContent="center">
@@ -95,13 +103,18 @@ const Home: React.FC = () => {
                         onChange={e => setDistrictSearch(e.target.value)}
                     />
                     <InputRightAddon
-                        backgroundColor="green"
+                        backgroundColor="tomato"
                         children={<Search2Icon color='white'/>}
                         borderRadius="20px"
                         cursor="pointer"
                         onClick={() => handleDistrictSearch(districtSearch)}
                     />
                 </InputGroup>
+                {!showDistList && !showSchoolList ?
+                    <Box marginTop="20px">
+                    <Animation lotti={effect} height={450} width={900} speed={1}/>
+                    </Box> : null
+                }
                 {showSearchHint ?
                     <Text
                         textAlign="center"
@@ -121,6 +134,7 @@ const Home: React.FC = () => {
                         position="absolute"
                         left="10"
                         top="25%"
+                        bg="beige"
                     >
                         <Text
                             marginRight="8"
@@ -157,9 +171,18 @@ const Home: React.FC = () => {
                         value={schoolSearch}
                         onChange={e => setSchoolSearch(e.target.value)}
                         />
+                        {showSchoolSearchHint ?
+                            <Text
+                                textAlign="center"
+                                fontSize="sm"
+                                paddingBottom="1"
+                            >
+                                * Input a school name
+                            </Text> : null
+                        }
                         <Button
                             variant="solid"
-                            colorScheme="green"
+                            colorScheme="orange"
                             size="md"
                             marginTop="3"
                             onClick={() => handleSchoolSearch(schoolSearch, schoolDistrict)}
@@ -169,10 +192,13 @@ const Home: React.FC = () => {
                     </Card>: null
                 }
                 {showDistList ?
-                    <Card variant="rounded" border="transparent" h="auto" w="700px">
+                    <Card variant="rounded" border="transparent" h="auto" w="700px" bg="beige">
                         {showNoResult ?
                             <Text>No search result</Text> : null
                         }
+                        <Box position="absolute" zIndex="1">
+                            <Animation lotti={searching} height={200} width={200} speed={0.5} />
+                        </Box>
                         {districtData.map((district, idx) =>
                             <Box key={idx} p={3} display={{ md: "flex" }} w="95%" borderBottom='2px'>
                                 <Text
@@ -217,7 +243,7 @@ const Home: React.FC = () => {
                     </Card> : null
                 }
                 {showSchoolList ?
-                    <Card variant="rounded" border="transparent" h="auto" w="700px">
+                    <Card variant="rounded" border="transparent" h="auto" w="700px" bg="beige">
                         {showNoResult ?
                             <Text>No search result</Text> : null
                         }
@@ -234,7 +260,11 @@ const Home: React.FC = () => {
                                 </Text>
                                 <Popover>
                                     <PopoverTrigger>
-                                        <InfoIcon color="teal.600" marginLeft="auto" marginRight="3%" cursor="pointer"/>
+                                        <Box marginLeft="auto" marginRight="3%">
+                                            <ScaleFade initialScale={0.9} in={true} whileHover={{ scale: 1.5 }}>
+                                                <InfoIcon color="teal.600" cursor="pointer" w={5} h={5}/>
+                                            </ScaleFade>
+                                        </Box>
                                     </PopoverTrigger>
                                     <PopoverContent w="auto" h="auto" color="white" bg="blue.800" borderColor="blue.800" fontSize="sm">
                                         <PopoverHeader fontWeight="bold" fontSize="md">{school.NAME}</PopoverHeader>
@@ -256,7 +286,7 @@ const Home: React.FC = () => {
                                             <Text>
                                                 State of Operation: {school.OPSTFIPS}
                                             </Text>
-                                            <Box h="150px" w="300px">
+                                            <Box h="150px" w="auto">
                                                 <Map geo={school.GEO} />
                                             </Box>
                                         </PopoverBody>
